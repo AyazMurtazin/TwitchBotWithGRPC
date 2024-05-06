@@ -16,16 +16,16 @@ class ChatServicer(chat_listener_pb2_grpc.TwitchChatServicer):
     async def StreamMessages(self, request, context):
         process = subprocess.Popen(['python3', 'TwitchBot.py', request.channel_name])
         try:
-            async for message in self._get_messages_from_redis():
+            async for message in self._get_messages_from_redis(request.channel_name):
                 print(f"Received message: {message.message}")
                 yield message
         except:
             process.terminate()
             print("Client disconnected")
 
-    async def _get_messages_from_redis(self):
+    async def _get_messages_from_redis(self, channel_name):
         while True:
-            message = redis_client.blpop('messages', timeout=30)
+            message = redis_client.blpop(channel_name, timeout=30)
             if message:
                 yield chat_listener_pb2.MessageResponse(message=message[1].decode())
         

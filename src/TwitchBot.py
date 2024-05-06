@@ -56,7 +56,7 @@ class Bot(commands.Bot):
 
     async def handle_message(self, message):
         # Push message to Redis message queue
-        self.redis_client.rpush('messages', message)
+        self.redis_client.rpush(self.channel_name, message)
 
     
 
