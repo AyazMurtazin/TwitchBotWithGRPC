@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message MessageResponse {
+    string message = 1;
+}
+message ChannelRequest {
+    string channel_name = 1;
+}
+service TwitchChat {
+    rpc StreamMessages(ChannelRequest) returns (stream MessageResponse) {}
+}
